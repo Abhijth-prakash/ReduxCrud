@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { addUser } from '../redux/slices/userSlice'
 const AddUser = () => {
-    const {register,handleSubmit,formState} = useForm()
+    const {register,reset,handleSubmit,formState} = useForm()
     const dispatch = useDispatch()
 
     const addingLogic = (data)=>{
             dispatch(addUser(data))
+            reset()
     }
   return (
     <div>

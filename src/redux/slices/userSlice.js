@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const addUser = createAsyncThunk(
   "users/addUser",
   async (userData) => {
-    const res = await fetch("https://jsonplaceholder.typicode.com/users", {
+    const res = await fetch("https://69ecb239af4ff533142b4652.mockapi.io/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -15,6 +15,15 @@ export const addUser = createAsyncThunk(
     return data;
   }
 );
+
+export const getUsers = createAsyncThunk(
+    "users/getusers",
+    async ()=>{
+        const res = await fetch("https://69ecb239af4ff533142b4652.mockapi.io/users")
+        const data = await res.json();
+        return data;
+    }
+)
 
 const userSlice = createSlice({
     name:"userSlice",
@@ -32,9 +41,19 @@ const userSlice = createSlice({
         .addCase(addUser.fulfilled,(state,action)=>{
             state.loading = false
             state.users.push(action.payload) 
-            state.error = null
         })
         .addCase(addUser.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error.message
+        })
+        .addCase(getUsers.pending,(state)=>{
+            state.loading = true
+        })
+        .addCase(getUsers.fulfilled,(state,action)=>{
+            state.loading = false
+            state.users = action.payload 
+        })
+        .addCase(getUsers.rejected,(state,action)=>{
             state.loading = false
             state.error = action.error.message
         })
