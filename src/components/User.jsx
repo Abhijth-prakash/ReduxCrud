@@ -2,15 +2,18 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-const User = () => {
+const User = ({id,view,setView}) => {
     const {users,loading,error} = useSelector(state=> state.users)
-    const {id} = useParams() 
     console.log(id)
     if(loading) return <p>loading....</p>
     if(error) return <p>something went wrong</p>
 
     const user = users.find(items=> items.id == id)
     if(!user) return <p>loading....</p>
+
+    const handle = ()=>{
+       setView(false)
+    }
     
 return (
     <div style={{ position:'fixed', top:0, left:0, width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center' }}>
@@ -18,6 +21,7 @@ return (
             <h1 style={{ marginBottom:'10px' }}>{user.name}</h1>
             <p style={{ marginBottom:'8px' }}>📧 {user.email}</p>
             <p style={{ marginBottom:'8px' }}>🎂 {user.age}</p>
+            <button onClick={()=>handle()} >close</button>
         </div>
     </div>
 )
