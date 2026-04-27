@@ -1,5 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+
+//delete user api
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (id) => {
+    const res = await fetch(`https://69ecb239af4ff533142b4652.mockapi.io/users/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+    return data;
+
+  }
+);
+
+
+//add user api
 export const addUser = createAsyncThunk(
   "users/addUser",
   async (userData) => {
@@ -16,6 +36,8 @@ export const addUser = createAsyncThunk(
   }
 );
 
+
+//get user api
 export const getUsers = createAsyncThunk(
     "users/getusers",
     async ()=>{
@@ -29,6 +51,7 @@ const userSlice = createSlice({
     name:"userSlice",
     initialState:{
         users:[],
+        prevState: [],
         loading:false,
         error:null
     },
@@ -56,6 +79,19 @@ const userSlice = createSlice({
         .addCase(getUsers.rejected,(state,action)=>{
             state.loading = false
             state.error = action.error.message
+        })
+        .addCase(deleteUser.pending,(state,action)=>{
+            state.prevState = state.users
+            const id = action.meta.arg
+            state.users = state.users.filter(items=>items.id !==id)
+        })
+        .addCase(deleteUser.fulfilled,(state,action)=>{
+            state.loading = false
+        })
+        .addCase(deleteUser.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error.message
+            state.users = state.prevState
         })
     }
 })
