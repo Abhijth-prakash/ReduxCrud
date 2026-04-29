@@ -1,6 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
+//upadte user api
+export const updateUser = createAsyncThunk(
+  "users/deleteUser",
+  async (id) => {
+    const res = await fetch(`https://69ecb239af4ff533142b4652.mockapi.io/users/${id}`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+    return data;
+
+  }
+);
+
+
 //delete user api
 export const deleteUser = createAsyncThunk(
   "users/deleteUser",
