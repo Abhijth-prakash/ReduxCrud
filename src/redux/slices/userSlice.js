@@ -3,16 +3,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 //upadte user api
 export const updateUser = createAsyncThunk(
-  "users/deleteUser",
-  async (id) => {
+  "users/updateUser",
+  async ({id,userData}) => {
     const res = await fetch(`https://69ecb239af4ff533142b4652.mockapi.io/users/${id}`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
       },
+       body: JSON.stringify(userData),
     });
 
     const data = await res.json();
+    console.log(data)
     return data;
 
   }
@@ -110,6 +112,18 @@ const userSlice = createSlice({
             state.loading = false
             state.error = action.error.message
             state.users = state.prevState
+        })
+        .addCase(updateUser.pending,(state,action)=>{
+                state.loading = true
+        })
+        .addCase(updateUser.fulfilled,(state,action)=>{
+            state.loading = false
+            const {id,name,email,age} = action.payload
+           state.users = state.users.map(items => items.id == id ? action.payload : items)
+        })
+        .addCase(updateUser.rejected,(state,action)=>{
+            state.loading = false
+            state.error = action.error.message
         })
     }
 })
