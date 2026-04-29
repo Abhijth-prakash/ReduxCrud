@@ -1,23 +1,28 @@
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import AddUser from './components/AddUser'
-import Home from './components/Home'
-import Nav from './components/Nav'
-import User from './components/User'
-import EditUser from './components/editUser'
-import ErrorBoundry from './Errorboundries/Errorboundry'
+import { lazy, Suspense } from "react";
+
+const AddUser = lazy(() => import("./components/AddUser"));
+const Home = lazy(() => import("./components/Home"));
+const Nav = lazy(() => import("./components/Nav"));
+const User = lazy(() => import("./components/User"));
+const EditUser = lazy(() => import("./components/editUser"));
+const ErrorBoundry = lazy(() => import("./Errorboundries/Errorboundry"));
 
 function App() {
 
   return (
     <>
-    <Nav></Nav>
+<Suspense fallback={<p>Loading...</p>}>
+  <ErrorBoundry>
+    <Nav />
     <Routes>
-      <Route path='/' element={<ErrorBoundry> <Home></Home> </ErrorBoundry>}></Route>
-      <Route path='/add' element={<ErrorBoundry> <AddUser></AddUser> </ErrorBoundry>}></Route>
-      <Route path='/user/:id' element={<ErrorBoundry> <EditUser></EditUser> </ErrorBoundry>}></Route>
+      <Route path='/' element={<Home />} />
+      <Route path='/add' element={<AddUser />} />
+      <Route path='/user/:id' element={<EditUser />} />
     </Routes>
-  
+  </ErrorBoundry>
+</Suspense>
     </>
   )
 }
