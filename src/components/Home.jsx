@@ -35,7 +35,7 @@ const Home = () => {
 
     const listitems = users
         .filter(items => items.name.toLowerCase().includes(input.toLowerCase()) || items.email.toLowerCase().includes(input.toLowerCase()) )
-        .filter(items => radio ? items.age >= 18 : true)
+        .filter(items => radio ? items.age >= 18 : items)
         .map(items=> <li key={items.id}>
         <span>{items.name}</span>
         <span>{items.email}</span>
@@ -47,7 +47,7 @@ const Home = () => {
     
   return (
     <div>
-        <input type="radio" name="filter" value="18+" onChange={radioDatahandle} /> 18+
+        <input type="checkbox" name="filter" value="18+" checked={radio} onChange={radioDatahandle} /> 18+
         <input type="text" placeholder='search....' value={input} onChange={(e)=> setInput(e.target.value)}  />
        {view && <User id={id} view={view} setView={setView} ></User> } 
         <h1>users:{users.length}</h1>
