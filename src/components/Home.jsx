@@ -7,6 +7,7 @@ import User from './User'
 const Home = () => {
     const {users,loading,error} = useSelector(state=> state.users)
     const [id,setId] = useState()
+    const [input,setInput] = useState("")
     const [view,setView] = useState(false)
     const dispatch = useDispatch()
     useEffect(()=>{
@@ -27,7 +28,10 @@ const Home = () => {
     }
 
 
-    const listitems = users.map(items=> <li key={items.id}>
+    const listitems = users
+        .filter(items => items.name.toLowerCase().includes(input.toLowerCase()) || items.email.toLowerCase().includes(input.toLowerCase()) )
+    
+        .map(items=> <li key={items.id}>
         <span>{items.name}</span>
         <span>{items.email}</span>
         <span>{items.age}</span>
@@ -38,6 +42,7 @@ const Home = () => {
     
   return (
     <div>
+        <input type="text" placeholder='search....' value={input} onChange={(e)=> setInput(e.target.value)}  />
        {view && <User id={id} view={view} setView={setView} ></User> } 
         <h1>users:{users.length}</h1>
          <div>
