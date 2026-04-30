@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
-import { addUser } from '../redux/slices/userSlice'
+import { useDispatch, useSelector } from 'react-redux'  
+import { addUser, getUsers } from '../redux/slices/userSlice' 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -12,15 +12,29 @@ const schema = z.object({
 });
 
 const AddUser = () => {
-  const { register, reset, handleSubmit, formState: { errors } } = useForm({
+  const dispatch = useDispatch();  
+  const { users } = useSelector(state => state.users)  
+
+  const { register, reset, handleSubmit, setError, formState: { errors } } = useForm({  
     resolver: zodResolver(schema), 
   });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUsers())
+  }, [dispatch])
 
   const addingLogic = (data) => {
-    dispatch(addUser(data));
-    reset();
+    const duplicateName = users.find(item => item.name === data.name)
+    const duplicateEmail = users.find(item => item.email === data.email)
+
+    if (duplicateName) {
+      setError("name", { message: "Name already exists" })  
+    } else if (duplicateEmail) {
+      setError("email", { message: "Email already exists" })
+    } else {
+      dispatch(addUser(data));
+      reset();
+    }
   };
 
   return (
@@ -33,7 +47,7 @@ const AddUser = () => {
         <p style={{color:"black"}}>{errors.email?.message}</p>
 
         <input type="text" {...register("age")} placeholder="age" />
-       <p style={{color:"black"}}>{errors.age?.message}</p>
+        <p style={{color:"black"}}>{errors.age?.message}</p>
 
         <button>submit</button>
       </form>

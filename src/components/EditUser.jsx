@@ -18,7 +18,7 @@ const EditUser = () => {
         age: z.coerce.number().min(1, "Age is required") 
     })
 
-    const {register, handleSubmit, reset,formState: { errors }} = useForm({
+    const {register, handleSubmit, reset,formState: { errors },setError} = useForm({
         resolver:zodResolver(schema)
     })
 
@@ -35,8 +35,17 @@ const EditUser = () => {
     
 
     const editFunction = (data) => {
+        const duplicateName = users.find(items=> items.name === data.name && items.id != id)
+        const duplicateEmail = users.find(items=> items.email === data.email && items.id != id)
+
+    if (duplicateName) {
+      setError("name", { message: "Name already exists" })  
+    } else if (duplicateEmail) {
+      setError("email", { message: "Email already exists" })
+    } else {
         dispatch(updateUser({id, userData: data}))
         navigate('/')
+    }
     }
 
 
