@@ -1,8 +1,9 @@
-import React, { use, useEffect, useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteUser, getUsers } from '../redux/slices/userSlice'
+import {  getUsers } from '../redux/slices/userSlice'
 import { Link } from 'react-router-dom'
 import User from './User'
+import Delete from './Delete'
 
 const Home = () => {
     const {users,loading,error} = useSelector(state=> state.users)
@@ -10,6 +11,7 @@ const Home = () => {
     const [input,setInput] = useState("")
     const [view,setView] = useState(false)
     const [radio,setRadio] = useState(false)
+    const [remove,setRemove] = useState(false)
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getUsers())
@@ -24,12 +26,13 @@ const Home = () => {
         setView(true)
     }
 
-    const deleteHandle =(id) =>{
-        dispatch(deleteUser(id))
-    }
-
     const radioDatahandle =()=>{
         setRadio(prev=> !prev)
+    }
+
+    const removeHandle = (id)=>{
+        setId(id)
+        setRemove(true)
     }
 
 
@@ -41,14 +44,15 @@ const Home = () => {
         <span>{items.email}</span>
         <span>{items.age}</span>
         <Link to={`/user/${items.id}`}>edit</Link>
-        <button onClick={()=>deleteHandle(items.id)}>delete</button>
        <button onClick={()=>handle(items.id)} >view</button>
+       <button onClick={()=>removeHandle(items.id)}>Remove</button>
     </li>)
     
   return (
     <div>
         <input type="checkbox" name="filter" value="18+" checked={radio} onChange={radioDatahandle} /> 18+
         <input type="text" placeholder='search....' value={input} onChange={(e)=> setInput(e.target.value)}  />
+        {remove && <Delete id={id} remove={remove}  setRemove={setRemove} ></Delete>}
        {view && <User id={id} view={view} setView={setView} ></User> } 
         <h1>users:{users.length}</h1>
          <div>
