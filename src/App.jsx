@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom'
-import './App.css'
 import { lazy, Suspense } from "react";
 
 const AddUser = lazy(() => import("./components/AddUser"));

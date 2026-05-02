@@ -1,30 +1,32 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
 
-const User = ({id,view,setView}) => {
-    const {users,loading,error} = useSelector(state=> state.users)
-    console.log(id)
-    if(loading) return <p>loading....</p>
-    if(error) return <p>something went wrong</p>
+const User = ({id, view, setView}) => {
+  const {users, loading, error} = useSelector(state => state.users)
 
-    const user = users.find(items=> items.id == id)
-    if(!user) return <p>loading....</p>
+  if(loading) return <p>loading....</p>
+  if(error) return <p>something went wrong</p>
 
-    const handle = ()=>{
-       setView(false)
-    }
-    
-return (
-    <div style={{ position:'fixed', top:0, left:0, width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center' }}>
-        <div style={{ backgroundColor:'white', padding:'40px', borderRadius:'10px', minWidth:'300px', boxShadow:'0 5px 15px rgba(0,0,0,0.3)' }}>
-            <h1 style={{ marginBottom:'10px' }}>{user.name}</h1>
-            <p style={{ marginBottom:'8px' }}>📧 {user.email}</p>
-            <p style={{ marginBottom:'8px' }}>🎂 {user.age}</p>
-            <button onClick={()=>handle()} >close</button>
+  const user = users.find(items => items.id == id)
+  if(!user) return <p>loading....</p>
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
+      <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-8 min-w-[320px] shadow-2xl">
+        <h1 className="text-2xl font-extrabold text-white tracking-tight mb-6">{user.name}</h1>
+        <div className="flex flex-col gap-3 mb-8">
+          <p className="font-mono text-sm text-zinc-400">📧 {user.email}</p>
+          <p className="font-mono text-sm text-zinc-400">🎂 {user.age}</p>
         </div>
+        <button
+          onClick={() => setView(false)}
+          className="w-full font-mono text-xs uppercase tracking-widest py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition-all"
+        >
+          Close
+        </button>
+      </div>
     </div>
-)
+  )
 }
 
 export default User
