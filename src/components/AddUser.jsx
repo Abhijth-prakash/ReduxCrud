@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addUser, getUsers } from '../redux/slices/userSlice'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useNavigate } from 'react-router-dom';
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -14,7 +15,7 @@ const schema = z.object({
 const AddUser = () => {
   const dispatch = useDispatch();
   const { users } = useSelector(state => state.users)
-
+  const navigate = useNavigate()
   const { register, reset, handleSubmit, setError, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
   });
@@ -34,6 +35,7 @@ const AddUser = () => {
     } else {
       dispatch(addUser(data));
       reset();
+      navigate('/')
     }
   };
 

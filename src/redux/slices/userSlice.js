@@ -76,6 +76,7 @@ const userSlice = createSlice({
         error:null
     },
     reducers:{},
+
     extraReducers:(builder)=>{
         builder
         .addCase(addUser.pending,(state)=>{
